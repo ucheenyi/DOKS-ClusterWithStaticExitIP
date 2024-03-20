@@ -26,3 +26,10 @@ variable "node_count" {
   description = "Number of worker nodes in the cluster"
   type        = number
 }
+
+variable "node_name" {
+  description = "Name of worker nodes in the cluster"
+  type        = string
+}
+
+
