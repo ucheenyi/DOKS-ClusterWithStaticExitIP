@@ -35,12 +35,13 @@ resource "digitalocean_kubernetes_cluster" "doks_cluster" {
     node_count = var.node_count
   }
 
-  tags = ["doks"]
+  tags = [var.uc_cluster_tag]
 }
 
 resource "kubernetes_deployment" "static_route_controller" {
   metadata {
-    name      = "uc-static-route-controller"
+    name = format("uc-%s", var.static_route_controller_name)
+
     namespace = "kube-system"
   }
 
@@ -49,20 +50,20 @@ resource "kubernetes_deployment" "static_route_controller" {
 
     selector {
       match_labels = {
-        app = "uc-static-route-controller"
+        app = format("uc-%s", var.static_route_controller_name)
       }
     }
 
     template {
       metadata {
         labels = {
-          app = "uc-static-route-controller"
+          app = format("uc-%s", var.static_route_controller_name)
         }
       }
 
       spec {
         container {
-          name  = "uc-static-route-controller"
+          name  = format("uc-%s", var.static_route_controller_name)
           image = "hashicraft/minecraft:v1.16.3"
           args  = ["--kubeconfig=/etc/kubernetes/admin.conf"]
         }
@@ -73,13 +74,13 @@ resource "kubernetes_deployment" "static_route_controller" {
 
 resource "kubernetes_service" "egress_gateway" {
   metadata {
-    name      = "uc-egress-gateway"
+    name      = format("uc-%s", var.egress_gateway_name)
     namespace = "kube-system"
   }
 
   spec {
     selector = {
-      app = "uc-static-route-controller"
+      app = format("uc-%s", var.static_route_controller_name)
     }
 
     port {

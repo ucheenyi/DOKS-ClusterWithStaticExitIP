@@ -32,4 +32,18 @@ variable "node_name" {
   type        = string
 }
 
+variable "uc_cluster_tag" {
+  type        = string
+  description = "Cluster Tag"
+}
+
+variable "static_route_controller_name" {
+  type        = string
+  description = "Static Route Controller Name"
+}
+
+variable "egress_gateway_name" {
+  type        = string
+  description = "Egress Gateway Name"
+}
 
