@@ -1,4 +1,3 @@
-## Required Providers
 terraform {
   required_providers {
     digitalocean = {
@@ -12,17 +11,6 @@ provider "digitalocean" {
   token = var.do_token
 }
 
-/*
-## Kubeconfig
-
-provider "kubernetes" {
-  config_path = "~/.kube/config"
-}
-
-*/
-
-
-## Kubeconfig Authentication
 data "digitalocean_kubernetes_cluster" "uc-cluster-details" {
   name = digitalocean_kubernetes_cluster.doks_cluster.name
 }
@@ -36,14 +24,10 @@ provider "kubernetes" {
 }
 
 
-
-
-
-## Create the DOK Cluster:
 resource "digitalocean_kubernetes_cluster" "doks_cluster" {
-  name     = var.cluster_name
-  region   = var.region
-  version  = var.k8s_version
+  name    = var.cluster_name
+  region  = var.region
+  version = var.k8s_version
 
   node_pool {
     name       = var.node_name
@@ -54,7 +38,6 @@ resource "digitalocean_kubernetes_cluster" "doks_cluster" {
   tags = ["doks"]
 }
 
-## Deploy the Static Route Controller:
 resource "kubernetes_deployment" "static_route_controller" {
   metadata {
     name      = "uc-static-route-controller"
@@ -81,8 +64,6 @@ resource "kubernetes_deployment" "static_route_controller" {
         container {
           name  = "uc-static-route-controller"
           image = "hashicraft/minecraft:v1.16.3"
-
-          //image = "quay.io/replicated/static-route-controller:latest"
           args  = ["--kubeconfig=/etc/kubernetes/admin.conf"]
         }
       }
@@ -90,7 +71,6 @@ resource "kubernetes_deployment" "static_route_controller" {
   }
 }
 
-## Configure the Static Route Controller as an Egress Gateway:
 resource "kubernetes_service" "egress_gateway" {
   metadata {
     name      = "uc-egress-gateway"
