@@ -1,4 +1,3 @@
-
 terraform {
   required_providers {
     digitalocean = {
@@ -19,4 +18,8 @@ provider "kubernetes" {
   cluster_ca_certificate = base64decode(
     data.digitalocean_kubernetes_cluster.uc-cluster-details.kube_config[0].cluster_ca_certificate
   )
+}
+
+data "digitalocean_kubernetes_cluster" "uc-cluster-details" {
+  name = digitalocean_kubernetes_cluster.doks_cluster.name
 }

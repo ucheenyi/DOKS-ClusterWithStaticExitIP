@@ -11,3 +11,7 @@ module "dok-cluster" {
   egress_gateway_name          = var.egress_gateway_name
   do_token                     = var.do_token
 }
+
+
+
+
